@@ -54,7 +54,14 @@
     .lp-lines{display:flex;flex-direction:column;gap:4px}
     .lp-line{height:3.5px;border-radius:2px;background:#f0ddd0}
     .lp-line.d{background:#dfc4b0}.lp-line.f{width:100%}.lp-line.m{width:78%}.lp-line.s{width:54%}.lp-line.xs{width:36%}
-    .lp-sign{margin-top:8px;padding-top:6px;border-top:1px solid #f0ddd0;font-family:'Playfair Display',serif;font-size:11px;font-style:italic;color:#c87048;text-align:right}
+
+    /* ── CHIUSURA LETTERA ── */
+    .lp-footer{margin-top:10px;padding-top:8px;border-top:1px solid #f0ddd0;display:flex;justify-content:space-between;align-items:flex-end}
+    .lp-sign{font-family:'Playfair Display',serif;font-size:11px;font-style:italic;color:#c87048;line-height:1.4}
+    .lp-ornament{display:flex;gap:3px;align-items:center;padding-bottom:2px}
+    .lp-ornament span{display:inline-block;width:5px;height:5px;border-radius:50%;background:#f9c784}
+    .lp-ornament span:nth-child(2){width:7px;height:7px;background:#e8793f}
+    .lp-ornament span:nth-child(3){width:5px;height:5px;background:#f9c784}
 
     .env-caption{margin-top:14px;color:#b07050;font-size:.88rem}
 
@@ -124,7 +131,13 @@
             <div class="lp-line m"></div>
             <div class="lp-line xs"></div>
           </div>
-          <div class="lp-sign">Rebecca ✦</div>
+          <!-- CHIUSURA LETTERA -->
+          <div class="lp-footer">
+            <div class="lp-sign">Con affetto,<br><strong>Rebecca</strong></div>
+            <div class="lp-ornament">
+              <span></span><span></span><span></span>
+            </div>
+          </div>
         </div>
 
         <!-- Sigillo / bottone -->
@@ -180,7 +193,6 @@
 </main>
 
 <script>
-  // Petali di sfondo
   const canvas = document.getElementById('bg');
   const ctx = canvas.getContext('2d');
   let W, H, petals = [];
@@ -227,7 +239,6 @@
   draw();
   window.addEventListener('resize', resize);
 
-  // Apertura busta
   document.getElementById('openBtn').addEventListener('click', () => {
     document.getElementById('envelope').classList.add('opening');
     setTimeout(() => {
@@ -243,3 +254,4 @@
 </script>
 </body>
 </html>
+
