@@ -412,9 +412,8 @@ document.getElementById('openBtn').addEventListener('click', () => {
 document.getElementById('btnPartecipo').addEventListener('click', function() {
   const rect = this.getBoundingClientRect();
   shootConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
-  setTimeout(() => {
-    window.open('https://wa.me/393245686586?text=Ciao!%20Confermo%20che%20partecipo%20alla%20festa%20', '_blank');
-  }, 1000);
+  // Apre subito (senza setTimeout) per evitare il blocco popup su Safari/iPhone
+  window.open('https://wa.me/393245686586?text=Ciao!%20Confermo%20che%20partecipo%20alla%20festa%20', '_blank');
 });
 
 // ── COUNTDOWN ──
@@ -458,3 +457,4 @@ document.getElementById('btnCal').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
