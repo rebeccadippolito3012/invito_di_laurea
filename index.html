@@ -24,15 +24,14 @@
     .content-screen{display:none;animation:fadeUp .65s cubic-bezier(.22,1,.36,1) both}
     .card.opened .content-screen{display:block}
 
-    /* ── PATTERN CARTA DA LETTERA ── */
+    /* ── BUSTA ── */
     .envelope-scene{max-width:380px;margin:0 auto 8px}
     .envelope{position:relative;width:100%;padding-bottom:62%}
     .env-body{
       position:absolute;inset:0;border:1.5px solid #e0b896;border-radius:5px;
       box-shadow:0 14px 40px rgba(180,90,40,.14);
       background-color:#fdf6f0;
-      background-image:
-        radial-gradient(circle, #e8c8b0 1px, transparent 1px);
+      background-image:radial-gradient(circle, #e8c8b0 1px, transparent 1px);
       background-size:18px 18px;
     }
     .env-tri-left{position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:140px solid #f5e6d8;border-right:195px solid transparent;z-index:1}
@@ -43,7 +42,7 @@
     .env-flap::before{content:'';position:absolute;top:0;left:0;right:0;height:0;border-left:192px solid transparent;border-right:192px solid transparent;border-top:148px solid #e8793f}
     .env-flap::after{content:'';position:absolute;top:146px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 4%,rgba(180,80,30,.22) 30%,rgba(180,80,30,.22) 70%,transparent 96%)}
 
-    /* ── SIGILLO con pulse ── */
+    /* ── SIGILLO ── */
     .env-seal{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);z-index:5;transition:opacity .3s,transform .3s}
     .seal-btn{
       appearance:none;border:none;cursor:pointer;
@@ -221,9 +220,9 @@
     </div>
 
     <div class="grid">
-      <div class="item"><div class="label">Data</div><div class="value">giorno x</div></div>
-      <div class="item"><div class="label">Ora</div><div class="value">ora x</div></div>
-      <div class="item"><div class="label">Luogo</div><div class="value">location x</div></div>
+      <div class="item"><div class="label">Data</div><div class="value">16 Aprile 2025</div></div>
+      <div class="item"><div class="label">Ora</div><div class="value">14:30</div></div>
+      <div class="item"><div class="label">Luogo</div><div class="value">Dip. di Informatica – Aula 4<br>Via Orabona 4, Bari</div></div>
       <div class="item"><div class="label">Dress code</div><div class="value">Come preferisci, l'importante è festeggiare!</div></div>
     </div>
 
@@ -376,13 +375,11 @@ function playRustle() {
   const src = ac.createBufferSource();
   src.buffer = buf;
 
-  // filtro passa-banda per tono "carta"
   const bp = ac.createBiquadFilter();
   bp.type = 'bandpass';
   bp.frequency.value = 1800;
   bp.Q.value = 0.6;
 
-  // inviluppo: sale veloce, scende lenta
   const gain = ac.createGain();
   gain.gain.setValueAtTime(0, ac.currentTime);
   gain.gain.linearRampToValueAtTime(0.18, ac.currentTime + 0.06);
@@ -421,8 +418,7 @@ document.getElementById('btnPartecipo').addEventListener('click', function() {
 });
 
 // ── COUNTDOWN ──
-// ⚠️  Sostituisci questa data con quella vera della laurea!
-const GRADUATION_DATE = new Date('2025-07-15T10:00:00');
+const GRADUATION_DATE = new Date('2025-04-16T14:30:00');
 
 function startCountdown() {
   function tick() {
@@ -450,12 +446,11 @@ function startCountdown() {
 
 // ── CALENDARIO ──
 document.getElementById('btnCal').addEventListener('click', () => {
-  // ⚠️  Aggiorna data, ora, luogo con i dati reali!
-  const dtStart = '20250715T100000';
-  const dtEnd   = '20250715T140000';
+  const dtStart = '20250416T143000';
+  const dtEnd   = '20250416T183000';
   const title   = encodeURIComponent('Laurea di Rebecca 🎓');
   const details = encodeURIComponent('Festeggiamo insieme la laurea di Rebecca in Informatica!');
-  const loc     = encodeURIComponent('Dipartimento di Informatica, Via Orabona 4, Bari');
+  const loc     = encodeURIComponent('Dipartimento di Informatica – Aula 4, Via Orabona 4, Bari');
 
   const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dtStart}/${dtEnd}&details=${details}&location=${loc}`;
   window.open(url, '_blank');
@@ -463,4 +458,5 @@ document.getElementById('btnCal').addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
