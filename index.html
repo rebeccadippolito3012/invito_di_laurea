@@ -9,16 +9,32 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{min-height:100vh;font-family:'DM Sans',sans-serif;background:#fff8f3;display:flex;align-items:center;justify-content:center;padding:24px;overflow-x:hidden}
     canvas#bg{position:fixed;inset:0;pointer-events:none;z-index:0}
-    .card{position:relative;z-index:1;width:100%;max-width:720px;background:#fff;border:1.5px solid #f3d5c0;border-radius:32px;box-shadow:0 20px 60px rgba(200,100,60,.10);padding:48px 32px;text-align:center;animation:cardIn .8s cubic-bezier(.22,1,.36,1) both}
+    canvas#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:100}
+
+    /* ── NASTRO ── */
+    .ribbon-wrap{position:absolute;top:-1px;left:50%;transform:translateX(-50%);z-index:10;display:flex;flex-direction:column;align-items:center}
+    .ribbon{background:linear-gradient(135deg,#e8793f,#f4a261);color:#fff;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:6px 28px;border-radius:0 0 8px 8px;box-shadow:0 4px 14px rgba(232,121,63,.28)}
+    .ribbon-tails{display:flex;gap:2px}
+    .ribbon-tail{width:18px;height:10px;clip-path:polygon(0 0,100% 0,50% 100%);background:#c85e2a}
+
+    .card{position:relative;z-index:1;width:100%;max-width:720px;background:#fff;border:1.5px solid #f3d5c0;border-radius:32px;box-shadow:0 20px 60px rgba(200,100,60,.10);padding:64px 32px 48px;text-align:center;animation:cardIn .8s cubic-bezier(.22,1,.36,1) both;overflow:visible}
     @keyframes cardIn{from{opacity:0;transform:translateY(32px) scale(.97)}to{opacity:1;transform:none}}
     .intro-screen{display:block}
     .card.opened .intro-screen{display:none}
     .content-screen{display:none;animation:fadeUp .65s cubic-bezier(.22,1,.36,1) both}
     .card.opened .content-screen{display:block}
 
+    /* ── PATTERN CARTA DA LETTERA ── */
     .envelope-scene{max-width:380px;margin:0 auto 8px}
     .envelope{position:relative;width:100%;padding-bottom:62%}
-    .env-body{position:absolute;inset:0;background:#fdf6f0;border:1.5px solid #e0b896;border-radius:5px;box-shadow:0 14px 40px rgba(180,90,40,.14)}
+    .env-body{
+      position:absolute;inset:0;border:1.5px solid #e0b896;border-radius:5px;
+      box-shadow:0 14px 40px rgba(180,90,40,.14);
+      background-color:#fdf6f0;
+      background-image:
+        radial-gradient(circle, #e8c8b0 1px, transparent 1px);
+      background-size:18px 18px;
+    }
     .env-tri-left{position:absolute;bottom:0;left:0;width:0;height:0;border-bottom:140px solid #f5e6d8;border-right:195px solid transparent;z-index:1}
     .env-tri-right{position:absolute;bottom:0;right:0;width:0;height:0;border-bottom:140px solid #f5e6d8;border-left:195px solid transparent;z-index:1}
     .env-bottom{position:absolute;bottom:-1px;left:-1px;right:-1px;overflow:hidden;height:52%;z-index:2}
@@ -27,6 +43,7 @@
     .env-flap::before{content:'';position:absolute;top:0;left:0;right:0;height:0;border-left:192px solid transparent;border-right:192px solid transparent;border-top:148px solid #e8793f}
     .env-flap::after{content:'';position:absolute;top:146px;left:0;right:0;height:1px;background:linear-gradient(to right,transparent 4%,rgba(180,80,30,.22) 30%,rgba(180,80,30,.22) 70%,transparent 96%)}
 
+    /* ── SIGILLO con pulse ── */
     .env-seal{position:absolute;left:50%;bottom:16%;transform:translateX(-50%);z-index:5;transition:opacity .3s,transform .3s}
     .seal-btn{
       appearance:none;border:none;cursor:pointer;
@@ -35,18 +52,32 @@
       border:3px solid #fff;
       outline:3px solid #e8a040;
       display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-      transition:transform .2s;
       box-shadow:0 6px 20px rgba(0,0,0,.18);
+      animation:sealPulse 2s ease-in-out infinite;
     }
-    .seal-btn:hover{transform:scale(1.08)}
-    .seal-btn:active{transform:scale(.96)}
+    @keyframes sealPulse{
+      0%,100%{transform:scale(1);box-shadow:0 6px 20px rgba(232,160,64,.3)}
+      50%{transform:scale(1.07);box-shadow:0 8px 28px rgba(232,160,64,.55)}
+    }
+    .seal-btn:hover{animation:none;transform:scale(1.1)}
+    .seal-btn:active{animation:none;transform:scale(.96)}
     .seal-top{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#1a1a1a;font-family:'DM Sans',sans-serif;line-height:1}
     .seal-mid{font-family:'Playfair Display',serif;font-size:15px;font-style:italic;font-weight:700;color:#1a1a1a;line-height:1}
 
     .envelope.opening .env-flap{transform:rotateX(-180deg)}
     .envelope.opening .env-seal{opacity:0;transform:translateX(-50%) scale(.7)}
 
-    .letter-pop{position:absolute;left:50%;bottom:10%;transform:translateX(-50%) translateY(0);width:72%;background:#fff;border:1px solid #e8d0b8;border-radius:5px;box-shadow:0 4px 20px rgba(180,90,40,.10);z-index:3;padding:14px 16px 12px;opacity:0;transition:transform .55s .4s cubic-bezier(.22,1,.36,1),opacity .4s .4s;pointer-events:none}
+    /* ── LETTERA ── */
+    .letter-pop{
+      position:absolute;left:50%;bottom:10%;transform:translateX(-50%) translateY(0);
+      width:72%;background:#fffaf6;
+      border:1px solid #e8d0b8;border-radius:5px;
+      box-shadow:0 4px 20px rgba(180,90,40,.10);
+      z-index:3;padding:14px 16px 12px;
+      opacity:0;transition:transform .55s .4s cubic-bezier(.22,1,.36,1),opacity .4s .4s;
+      pointer-events:none;
+      background-image:repeating-linear-gradient(transparent,transparent 19px,#f2ddd0 19px,#f2ddd0 20px);
+    }
     .envelope.opening .letter-pop{transform:translateX(-50%) translateY(-90%);opacity:1;pointer-events:auto}
     .lp-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:8px;margin-bottom:8px;border-bottom:1px solid #f0ddd0}
     .lp-from{font-family:'Playfair Display',serif;font-size:10px;color:#c87048;font-style:italic;line-height:1.5}
@@ -54,8 +85,6 @@
     .lp-lines{display:flex;flex-direction:column;gap:4px}
     .lp-line{height:3.5px;border-radius:2px;background:#f0ddd0}
     .lp-line.d{background:#dfc4b0}.lp-line.f{width:100%}.lp-line.m{width:78%}.lp-line.s{width:54%}.lp-line.xs{width:36%}
-
-    /* ── CHIUSURA LETTERA ── */
     .lp-footer{margin-top:10px;padding-top:8px;border-top:1px solid #f0ddd0;display:flex;justify-content:space-between;align-items:flex-end}
     .lp-sign{font-family:'Playfair Display',serif;font-size:11px;font-style:italic;color:#c87048;line-height:1.4}
     .lp-ornament{display:flex;gap:3px;align-items:center;padding-bottom:2px}
@@ -64,6 +93,14 @@
     .lp-ornament span:nth-child(3){width:5px;height:5px;background:#f9c784}
 
     .env-caption{margin-top:14px;color:#b07050;font-size:.88rem}
+
+    /* ── COUNTDOWN ── */
+    .countdown-wrap{margin:20px auto 4px;max-width:480px}
+    .countdown-label{font-size:.78rem;text-transform:uppercase;letter-spacing:.12em;color:#c88060;margin-bottom:10px}
+    .countdown-grid{display:flex;justify-content:center;gap:10px}
+    .cd-unit{background:#fff8f3;border:1px solid #f3d5c0;border-radius:14px;padding:10px 14px;min-width:62px}
+    .cd-num{font-family:'Playfair Display',serif;font-size:1.7rem;color:#8a3820;line-height:1}
+    .cd-lbl{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#c88060;margin-top:3px}
 
     .tag{display:inline-block;padding:7px 18px;border-radius:999px;background:#fff0e7;border:1px solid #f3c8a8;color:#c45e2a;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px}
     h1{font-family:'Playfair Display',serif;font-size:clamp(2.8rem,7vw,4.6rem);font-weight:400;color:#8a3820;line-height:1.05}
@@ -78,15 +115,16 @@
     .msg{max-width:520px;margin:0 auto 20px;color:#a86040;line-height:1.85;font-size:.97rem}
     .code-wrap{display:inline-block;padding:10px 18px;border-radius:12px;background:#fff0e7;border:1px solid #f3c8a8;font-family:'Courier New',monospace;font-size:.8rem;color:#c45e2a;margin-bottom:26px}
     .btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-    .aBtn{padding:13px 24px;border-radius:999px;background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;font-size:.91rem;font-weight:700;font-family:'DM Sans',sans-serif;text-decoration:none;box-shadow:0 6px 18px rgba(231,111,81,.22);transition:transform .2s,box-shadow .2s}
+    .aBtn{padding:13px 24px;border-radius:999px;background:linear-gradient(135deg,#f4a261,#e76f51);color:#fff;font-size:.91rem;font-weight:700;font-family:'DM Sans',sans-serif;text-decoration:none;box-shadow:0 6px 18px rgba(231,111,81,.22);transition:transform .2s,box-shadow .2s;cursor:pointer;border:none}
     .aBtn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(231,111,81,.32)}
     .aBtn.outline{background:transparent;border:1.5px solid #f4a261;color:#c45e2a;box-shadow:none}
     .aBtn.outline:hover{background:#fff0e7}
     .aBtn.grey{background:linear-gradient(135deg,#c8c0ba,#a89890);box-shadow:none}
+    .aBtn.cal{background:linear-gradient(135deg,#a8c4e8,#7098c8);box-shadow:0 6px 18px rgba(112,152,200,.22)}
     @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
 
     @media(max-width:560px){
-      .card{padding:32px 16px}
+      .card{padding:64px 16px 32px}
       .grid{grid-template-columns:1fr}
       .aBtn{width:100%;text-align:center}
       .env-tri-left{border-right-width:50vw;border-bottom-width:36vw}
@@ -95,12 +133,22 @@
       .env-flap::before{border-top-width:32vw}
       .env-flap::after{top:calc(32vw - 2px)}
       .env-bottom::after{border-bottom-width:30vw}
+      .countdown-grid{gap:6px}
+      .cd-unit{min-width:52px;padding:8px 10px}
     }
   </style>
 </head>
 <body>
 <canvas id="bg"></canvas>
+<canvas id="confetti-canvas"></canvas>
+
 <main class="card" id="card">
+
+  <!-- NASTRO -->
+  <div class="ribbon-wrap">
+    <div class="ribbon">✦ Laurea ✦</div>
+    <div class="ribbon-tails"><div class="ribbon-tail"></div><div class="ribbon-tail"></div></div>
+  </div>
 
   <!-- SCHERMATA BUSTA -->
   <section class="intro-screen">
@@ -112,7 +160,6 @@
         <div class="env-bottom"></div>
         <div class="env-flap"></div>
 
-        <!-- Lettera che sale all'apertura -->
         <div class="letter-pop">
           <div class="lp-header">
             <div class="lp-from">Cara amica,<br>sei invitata…</div>
@@ -131,7 +178,6 @@
             <div class="lp-line m"></div>
             <div class="lp-line xs"></div>
           </div>
-          <!-- CHIUSURA LETTERA -->
           <div class="lp-footer">
             <div class="lp-sign">Con affetto,<br><strong>Rebecca</strong></div>
             <div class="lp-ornament">
@@ -140,7 +186,6 @@
           </div>
         </div>
 
-        <!-- Sigillo / bottone -->
         <div class="env-seal">
           <button class="seal-btn" id="openBtn">
             <span class="seal-top">Apri</span>
@@ -157,6 +202,17 @@
     <span class="tag">Laurea in Informatica e Tecnologie per la Produzione del Software</span>
     <h1>Rebecca</h1>
     <p class="sub">Sono felice di invitarti a festeggiare con me questo traguardo.</p>
+
+    <!-- COUNTDOWN -->
+    <div class="countdown-wrap">
+      <div class="countdown-label">Manca ancora</div>
+      <div class="countdown-grid">
+        <div class="cd-unit"><div class="cd-num" id="cd-days">--</div><div class="cd-lbl">Giorni</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-hours">--</div><div class="cd-lbl">Ore</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-mins">--</div><div class="cd-lbl">Minuti</div></div>
+        <div class="cd-unit"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">Secondi</div></div>
+      </div>
+    </div>
 
     <div class="divider">
       <div class="divider-line"></div>
@@ -185,72 +241,225 @@
         </svg>
         Mappa
       </a>
-      <a class="aBtn" href="https://wa.me/393245686586?text=Ciao!%20Confermo%20che%20partecipo%20alla%20festa%20" target="_blank">Partecipo</a>
+      <button class="aBtn" id="btnPartecipo">Partecipo 🎉</button>
       <a class="aBtn grey" href="https://wa.me/393245686586?text=Ciao!%20Purtroppo%20non%20riesco%20a%20venire%20" target="_blank">Non partecipo</a>
+      <button class="aBtn cal" id="btnCal">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" style="display:inline;vertical-align:middle;margin-right:5px">
+          <rect x="3" y="4" width="18" height="18" rx="2" stroke="#fff" stroke-width="2" fill="none"/>
+          <path d="M16 2v4M8 2v4M3 10h18" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Salva in calendario
+      </button>
     </div>
+    <p style="margin-top:12px;font-size:.78rem;color:#c88060;">📅 Apre Google Calendar — aggiungi l'evento in un click</p>
   </section>
 
 </main>
 
 <script>
-  const canvas = document.getElementById('bg');
-  const ctx = canvas.getContext('2d');
-  let W, H, petals = [];
-  const COLORS = ['#f4a261','#e76f51','#ffd6a5','#ffb4a2','#f9c784'];
+// ── PETALI DI SFONDO ──
+const canvas = document.getElementById('bg');
+const ctx = canvas.getContext('2d');
+let W, H, petals = [];
+const COLORS = ['#f4a261','#e76f51','#ffd6a5','#ffb4a2','#f9c784'];
 
-  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
 
-  function Petal() {
-    this.reset = function(init) {
-      this.x = Math.random() * W;
-      this.y = init ? Math.random() * H : -20;
-      this.vy = .7 + Math.random() * 1.3;
-      this.vx = (Math.random() - .5) * 1.1;
-      this.rot = Math.random() * 360;
-      this.vr = (Math.random() - .5) * 2.5;
-      this.w = 9 + Math.random() * 11;
-      this.h = 5 + Math.random() * 7;
-      this.alpha = .2 + Math.random() * .3;
-      this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
-    };
-    this.reset(true);
-  }
+function Petal() {
+  this.reset = function(init) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : -20;
+    this.vy = .7 + Math.random() * 1.3;
+    this.vx = (Math.random() - .5) * 1.1;
+    this.rot = Math.random() * 360;
+    this.vr = (Math.random() - .5) * 2.5;
+    this.w = 9 + Math.random() * 11;
+    this.h = 5 + Math.random() * 7;
+    this.alpha = .2 + Math.random() * .3;
+    this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+  };
+  this.reset(true);
+}
 
-  function draw() {
-    ctx.clearRect(0, 0, W, H);
-    petals.forEach(p => {
-      ctx.save();
-      ctx.globalAlpha = p.alpha;
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, p.w/2, p.h/2, 0, 0, Math.PI*2);
-      ctx.fill();
-      ctx.restore();
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr;
-      if (p.y > H + 20) p.reset(false);
-    });
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  for (let i = 0; i < 45; i++) petals.push(new Petal());
-  draw();
-  window.addEventListener('resize', resize);
-
-  document.getElementById('openBtn').addEventListener('click', () => {
-    document.getElementById('envelope').classList.add('opening');
-    setTimeout(() => {
-      document.getElementById('card').classList.add('opened');
-      for (let i = 0; i < 40; i++) {
-        const p = new Petal();
-        p.y = -20;
-        p.x = Math.random() * W;
-        petals.push(p);
-      }
-    }, 900);
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  petals.forEach(p => {
+    ctx.save();
+    ctx.globalAlpha = p.alpha;
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.rot * Math.PI / 180);
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.w/2, p.h/2, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.restore();
+    p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+    if (p.y > H + 20) p.reset(false);
   });
+  requestAnimationFrame(draw);
+}
+
+resize();
+for (let i = 0; i < 45; i++) petals.push(new Petal());
+draw();
+window.addEventListener('resize', resize);
+
+// ── CONFETTI ──
+const cCanvas = document.getElementById('confetti-canvas');
+const cCtx = cCanvas.getContext('2d');
+let confettis = [];
+
+function resizeC() { cCanvas.width = window.innerWidth; cCanvas.height = window.innerHeight; }
+resizeC();
+window.addEventListener('resize', resizeC);
+
+const CCOLORS = ['#f4a261','#e76f51','#ffd166','#06d6a0','#118ab2','#ef476f','#fff'];
+
+function Confetto(x, y) {
+  this.x = x || Math.random() * cCanvas.width;
+  this.y = y || -10;
+  this.w = 7 + Math.random() * 8;
+  this.h = 4 + Math.random() * 5;
+  this.color = CCOLORS[Math.floor(Math.random() * CCOLORS.length)];
+  this.rot = Math.random() * 360;
+  this.vx = (Math.random() - .5) * 8;
+  this.vy = 3 + Math.random() * 5;
+  this.vr = (Math.random() - .5) * 8;
+  this.gravity = .15;
+  this.alive = true;
+}
+
+function shootConfetti(originX, originY) {
+  for (let i = 0; i < 120; i++) {
+    const c = new Confetto(originX, originY);
+    c.vy = -(6 + Math.random() * 10);
+    c.vx = (Math.random() - .5) * 14;
+    confettis.push(c);
+  }
+  animateConfetti();
+}
+
+let confettiRAF;
+function animateConfetti() {
+  cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+  confettis = confettis.filter(c => c.alive);
+  confettis.forEach(c => {
+    c.vy += c.gravity;
+    c.x += c.vx;
+    c.y += c.vy;
+    c.rot += c.vr;
+    if (c.y > cCanvas.height + 20) c.alive = false;
+    cCtx.save();
+    cCtx.globalAlpha = .88;
+    cCtx.translate(c.x, c.y);
+    cCtx.rotate(c.rot * Math.PI / 180);
+    cCtx.fillStyle = c.color;
+    cCtx.fillRect(-c.w/2, -c.h/2, c.w, c.h);
+    cCtx.restore();
+  });
+  if (confettis.length > 0) {
+    confettiRAF = requestAnimationFrame(animateConfetti);
+  } else {
+    cCtx.clearRect(0, 0, cCanvas.width, cCanvas.height);
+  }
+}
+
+// ── SUONO FRUSCIO CARTA ──
+function playRustle() {
+  const ac = new (window.AudioContext || window.webkitAudioContext)();
+  const duration = 1.4;
+  const bufSize = ac.sampleRate * duration;
+  const buf = ac.createBuffer(1, bufSize, ac.sampleRate);
+  const data = buf.getChannelData(0);
+  for (let i = 0; i < bufSize; i++) data[i] = (Math.random() * 2 - 1);
+
+  const src = ac.createBufferSource();
+  src.buffer = buf;
+
+  // filtro passa-banda per tono "carta"
+  const bp = ac.createBiquadFilter();
+  bp.type = 'bandpass';
+  bp.frequency.value = 1800;
+  bp.Q.value = 0.6;
+
+  // inviluppo: sale veloce, scende lenta
+  const gain = ac.createGain();
+  gain.gain.setValueAtTime(0, ac.currentTime);
+  gain.gain.linearRampToValueAtTime(0.18, ac.currentTime + 0.06);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + duration);
+
+  src.connect(bp);
+  bp.connect(gain);
+  gain.connect(ac.destination);
+  src.start();
+  src.stop(ac.currentTime + duration);
+}
+
+// ── APERTURA BUSTA ──
+document.getElementById('openBtn').addEventListener('click', () => {
+  playRustle();
+  document.getElementById('envelope').classList.add('opening');
+  setTimeout(() => {
+    document.getElementById('card').classList.add('opened');
+    for (let i = 0; i < 40; i++) {
+      const p = new Petal();
+      p.y = -20;
+      p.x = Math.random() * W;
+      petals.push(p);
+    }
+    startCountdown();
+  }, 900);
+});
+
+// ── CONFETTI su "Partecipo" ──
+document.getElementById('btnPartecipo').addEventListener('click', function() {
+  const rect = this.getBoundingClientRect();
+  shootConfetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
+  setTimeout(() => {
+    window.open('https://wa.me/393245686586?text=Ciao!%20Confermo%20che%20partecipo%20alla%20festa%20', '_blank');
+  }, 1000);
+});
+
+// ── COUNTDOWN ──
+// ⚠️  Sostituisci questa data con quella vera della laurea!
+const GRADUATION_DATE = new Date('2025-07-15T10:00:00');
+
+function startCountdown() {
+  function tick() {
+    const now = new Date();
+    const diff = GRADUATION_DATE - now;
+    if (diff <= 0) {
+      document.getElementById('cd-days').textContent = '0';
+      document.getElementById('cd-hours').textContent = '0';
+      document.getElementById('cd-mins').textContent = '0';
+      document.getElementById('cd-secs').textContent = '0';
+      return;
+    }
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000) / 60000);
+    const secs  = Math.floor((diff % 60000) / 1000);
+    document.getElementById('cd-days').textContent  = String(days).padStart(2,'0');
+    document.getElementById('cd-hours').textContent = String(hours).padStart(2,'0');
+    document.getElementById('cd-mins').textContent  = String(mins).padStart(2,'0');
+    document.getElementById('cd-secs').textContent  = String(secs).padStart(2,'0');
+  }
+  tick();
+  setInterval(tick, 1000);
+}
+
+// ── CALENDARIO ──
+document.getElementById('btnCal').addEventListener('click', () => {
+  // ⚠️  Aggiorna data, ora, luogo con i dati reali!
+  const dtStart = '20250715T100000';
+  const dtEnd   = '20250715T140000';
+  const title   = encodeURIComponent('Laurea di Rebecca 🎓');
+  const details = encodeURIComponent('Festeggiamo insieme la laurea di Rebecca in Informatica!');
+  const loc     = encodeURIComponent('Dipartimento di Informatica, Via Orabona 4, Bari');
+
+  const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dtStart}/${dtEnd}&details=${details}&location=${loc}`;
+  window.open(url, '_blank');
+});
 </script>
 </body>
 </html>
